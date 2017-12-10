@@ -23,6 +23,12 @@
           <%= link_to "Register", new_user_path %> |
           <%= link_to "Login", :login %>
         <% end %>
+        <%= form_tag projects_path, :method => 'get' do %>
+        <p>
+          <%= text_field_tag :search, params[:search], placeholder: "Projects" %>
+          <%= submit_tag "Search", :title => nil %>
+        </p>
+        <%end %>
       </nav>
     </header>
 

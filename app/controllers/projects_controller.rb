@@ -2,8 +2,13 @@ class ProjectsController < ApplicationController
   before_action :require_login, only: [:new, :create]
 
   def index
+    @projects = if params[:search]
+      Project.where("title ILike ?", "%#{params[:search]}%")
+    else
     @projects = Project.all
     @projects = @projects.order(:end_date)
+  end
+
   end
 
   def show
