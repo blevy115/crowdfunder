@@ -35,4 +35,26 @@ class UserTest < ActiveSupport::TestCase
     actual = user.full_name
     assert_equal(expected, actual)
   end
+
+  test "new project with an owner" do
+    user = User.create(
+      first_name: "John",
+      last_name: "Doe",
+      email: "johndoe@gmail.com",
+      password: "password",
+      password_confirmation: "password"
+    )
+    project = Project.new(
+      title: "The test project",
+      description: Faker::Lorem.paragraph,
+      goal: 90_000,
+      start_date: Time.now.utc - rand(60).days,
+      end_date: Time.now.utc + rand(10).days,
+      user_id: user.id
+    )
+    user.admin = true
+
+    assert project.user.valid?
+
+  end
 end
