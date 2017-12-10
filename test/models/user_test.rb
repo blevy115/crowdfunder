@@ -21,4 +21,11 @@ class UserTest < ActiveSupport::TestCase
     user = User.new(email: "bettymaker@gmail.com", password: "1234", password_confirmation: "1234")
     refute user.valid?
   end
+
+  test "full name displays first and last name" do
+    user = User.new(first_name: "John", last_name: "Doe")
+    expected = "John Doe"
+    actual = user.full_name
+    assert_equal(expected, actual)
+  end
 end
