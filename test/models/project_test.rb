@@ -43,7 +43,20 @@ class ProjectTest < ActiveSupport::TestCase
     assert_equal(expected, actual)
   end
 
-
+  def test_goal_positive
+    owner = new_user
+    owner.save
+    project = Project.new(
+      title:       'Cool new boardgame',
+      description: 'Trade sheep',
+      start_date:  Date.today,
+      end_date:    Date.today + 1.month,
+      goal:        0
+    )
+    project.user = owner
+    project.save
+    refute project.valid?
+  end
 
   def new_project
     Project.new(
