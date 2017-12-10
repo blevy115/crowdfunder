@@ -20,6 +20,31 @@ class ProjectTest < ActiveSupport::TestCase
     assert project.invalid?, 'Project should not save without owner.'
   end
 
+  def test_total_pledge
+    owner = new_user
+    owner.save
+    project = new_project
+    project.user = owner
+    project.save
+    pledger = another_user
+    pledger.save
+    pledge1 = Pledge.create(
+      dollar_amount: 99.00,
+      project: project,
+      user: pledger
+    )
+    pledge2 = Pledge.create(
+      dollar_amount: 99.00,
+      project: project,
+      user: pledger
+    )
+    expected = 198.00
+    actual = project.total_pledge
+    assert_equal(expected, actual)
+  end
+
+
+
   def new_project
     Project.new(
       title:       'Cool new boardgame',
@@ -39,5 +64,16 @@ class ProjectTest < ActiveSupport::TestCase
       password_confirmation: 'passpass'
     )
   end
+
+  def another_user
+    User.new(
+      first_name:            'James',
+      last_name:             'Lowenthal',
+      email:                 'james@example.com',
+      password:              'passpass',
+      password_confirmation: 'passpass'
+    )
+  end
+
 
 end
