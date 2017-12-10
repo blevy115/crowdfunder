@@ -58,6 +58,22 @@ class ProjectTest < ActiveSupport::TestCase
     refute project.valid?
   end
 
+  def test_project_many_categories
+    owner = new_user
+    owner.save
+    project = new_project
+    project.user = owner
+    project.save
+    category1 = new_category
+    category2 = another_category
+    category1.save
+    category2.save
+    project.categories << category1
+    project.categories << category2
+    assert project.valid?
+  end
+
+
   def new_project
     Project.new(
       title:       'Cool new boardgame',
@@ -88,5 +104,15 @@ class ProjectTest < ActiveSupport::TestCase
     )
   end
 
+  def new_category
+    Category.new(
+      tag: "Art"
+    )
+  end
 
+  def another_category
+    Category.new(
+      tag: "Music"
+    )
+  end
 end
