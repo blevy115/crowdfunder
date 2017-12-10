@@ -12,6 +12,8 @@
 <p>Total amount Pledged: <%= @project.total_pledge %>$</p>
 <% if @project.pledges.pluck(:user_id).include?(session[:user_id]) %>
 <p>You have already backed this project</p>
+<%else %>
+<p>You have not backed this project yet</p>
 <%end %>
 <%end %>
 <%= form_for [@project, Pledge.new] do |f| %>
