@@ -1,0 +1,9 @@
+<h1>Category: <%= @category.tag %></h1>
+
+
+<h2> Projects</h2>
+<ul>
+<% @category.projects.each do |project|  %>
+<li><%= project.title %></li>
+<%end %>
+</ul>
