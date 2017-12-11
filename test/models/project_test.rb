@@ -40,4 +40,23 @@ class ProjectTest < ActiveSupport::TestCase
     )
   end
 
+  test 'time left displays days left' do
+    owner = new_user
+    owner.save
+    project = Project.new(
+      title:       'Cool new boardgame',
+      description: 'Trade sheep',
+      start_date: DateTime.now.utc,
+      end_date: DateTime.now.utc + 1.month,
+      goal:        50000,
+      user:        owner,
+    )
+    project.save
+
+    expected = "30 days, 23 hours"
+    actual = project.time_left
+
+    assert_equal expected, actual
+  end
+
 end
