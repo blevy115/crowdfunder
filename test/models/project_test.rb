@@ -53,7 +53,7 @@ class ProjectTest < ActiveSupport::TestCase
     )
     project.save
 
-    expected = "30 days, 23 hours"
+    expected = "about 1 month"
     actual = project.time_left
 
     assert_equal expected, actual
