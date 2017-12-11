@@ -7,8 +7,22 @@ class Project < ActiveRecord::Base
   has_many :pledges
   has_many :users, through: :pledges # backers
   belongs_to :user # project owner
+  has_and_belongs_to_many :categories
 
-  validates :title, :description, :goal, :start_date, :end_date, :user, presence: true
+  validates :user, :title, :description, :goal, :start_date, :end_date, presence: true
+  validates :goal, numericality: {greater_than: 0}
+  validate :before_start_date_after_start_date
+  
+  def total_pledge
+  pledges = Pledge.where("project_id = ?", id)
+  total_amount = pledges.pluck(:dollar_amount).sum
+  return total_amount
+  end
+
+  def before_start_date_after_start_date
+    if :start_date > :created_at && :end_date > :start_date
+    end
+  end
 
   def time_left
     # seconds_left = end_date - DateTime.now.utc
@@ -19,4 +33,5 @@ class Project < ActiveRecord::Base
 
     return "#{(end_date > DateTime.now.utc) ? time_ago_in_words(end_date) : 'past deadline'}"
   end
+
 end

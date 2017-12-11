@@ -2,6 +2,14 @@ Pledge.destroy_all
 Reward.destroy_all
 User.destroy_all
 Project.destroy_all
+Category.destroy_all
+
+
+Category.create(tag: "Music")
+Category.create(tag: "TV")
+Category.create(tag: "Art")
+
+
 
 5.times do
   User.create!(
@@ -20,13 +28,13 @@ end
               goal: rand(100000),
               start_date: Time.now.utc - rand(60).days,
               end_date: Time.now.utc + rand(10).days,
-              user_id: 1,
+              user: User.first
             )
 
   5.times do
     project.rewards.create!(
       description: Faker::Superhero.power,
-      dollar_amount: rand(100),
+      dollar_amount: rand(1..100),
     )
   end
 end
@@ -38,6 +46,6 @@ end
   Pledge.create!(
     user: User.all.where("id > ?", 1).sample,
     project: project,
-    dollar_amount: project.rewards.sample.dollar_amount + rand(10)
+    dollar_amount: project.rewards.sample.dollar_amount + rand(1..10)
   )
 end
