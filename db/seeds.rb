@@ -4,6 +4,7 @@ User.destroy_all
 Project.destroy_all
 Category.destroy_all
 
+
 Category.create(tag: "Music")
 Category.create(tag: "TV")
 Category.create(tag: "Art")
@@ -19,6 +20,7 @@ Category.create(tag: "Art")
     password_confirmation: 'password'
   )
 end
+
 10.times do
   project = Project.create!(
               title: Faker::App.name,
@@ -42,7 +44,7 @@ end
   project = Project.all.sample
 
   Pledge.create!(
-    user: User.all.sample,
+    user: User.all.where("id > ?", 1).sample,
     project: project,
     dollar_amount: project.rewards.sample.dollar_amount + rand(1..10)
   )
