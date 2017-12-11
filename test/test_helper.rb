@@ -18,4 +18,5 @@ require 'rails/test_help'
 class ActionController::TestCase
   include Sorcery::TestHelpers::Rails::Integration
   include Sorcery::TestHelpers::Rails::Controller
+  include FactoryBot::Syntax::Methods
 end
