@@ -2,8 +2,13 @@ class ProjectsController < ApplicationController
   before_action :require_login, only: [:new, :create]
 
   def index
+    @projects = if params[:search]
+      Project.where("title ILike ?", "%#{params[:search]}%")
+    else
     @projects = Project.all
     @projects = @projects.order(:end_date)
+  end
+
   end
 
   def show
@@ -23,6 +28,13 @@ class ProjectsController < ApplicationController
     @project.start_date = params[:project][:start_date]
     @project.end_date = params[:project][:end_date]
     @project.image = params[:project][:image]
+    @project.user_id = session[:user_id]
+    @project.categories = []
+    params[:project][:categories].each do |cat|
+    @project.categories << Category.where("id = ?", cat)
+    end
+
+
 
     if @project.save
       redirect_to projects_url

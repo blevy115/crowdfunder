@@ -17,11 +17,21 @@
 
       <nav class="site-nav">
         <% if current_user %>
+          <%= link_to "Profile", user_url(:user)  %>
           <%= link_to "Logout", :logout, method: :delete %>
         <% else %>
           <%= link_to "Register", new_user_path %> |
           <%= link_to "Login", :login %>
         <% end %>
+        <%= form_tag projects_path, :method => 'get' do %>
+        <p>
+          <%= text_field_tag :search, params[:search], placeholder: "Projects" %>
+          <%= submit_tag "Search", :title => nil %>
+        </p>
+        <%end %>
+        <p>
+          <%= link_to "Categories", categories_url %>
+        </p>
       </nav>
     </header>
 

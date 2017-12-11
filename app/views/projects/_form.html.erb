@@ -19,6 +19,14 @@
     <%= f.text_field :image %>
   </div>
 
+
+  <div>
+    <% Category.all.each do |category| %>
+      <%= f.check_box :categories, { multiple: true }, category.id %>
+      <%= f.label category.tag %>
+
+    <% end %>
+  </div>
   <div>
     <%= f.label :start_date %>
     <%= f.date_field :start_date %>

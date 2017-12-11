@@ -1,0 +1,28 @@
+<h1>This is <%= @user.first_name %> <%= @user.last_name%> 's page'</h1>
+
+<h2>Projects Backed</h2>
+<ul>
+  <%pledges = Pledge.where("user_id = ?", @user.id) %>
+  <%total_of_pledges = 0%>
+  <%products_pledged = []%> <!-- Used to remove duplicate projects -->
+  <%pledges.each do |pledge| %>
+  <% unless products_pledged.include?(pledge.project_id) %>
+  <li> <%project = Project.find_by("id = ?", pledge.project_id) %>
+    <!-- I have pledged  <%=pledge.dollar_amount %> $  to Project <%= project.title %> -->
+    I have backed project <%= project.title %>
+  </li>
+  <%total_of_pledges += pledge.dollar_amount %>
+  <%products_pledged << pledge.project_id %>
+  <%end %>
+  <%end %>
+</ul>
+
+<p> I have pledged <%= total_of_pledges %> $ total on this website</p>
+
+<h2> Projects Owned </h2>
+  <ul>
+    <%owned = Project.where("user_id = ?", @user.id) %>
+    <%owned.each do |project| %>
+    <li>I own project <%= project.title %> </li>
+    <%end %>
+  </ul>
