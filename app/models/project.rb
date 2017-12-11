@@ -14,4 +14,15 @@ class Project < ActiveRecord::Base
   return total_amount
   end
 
+
+  validates :user, :title, :description, :goal, :start_date, :end_date, presence: true
+  validate :before_start_date_after_start_date
+
+  def before_start_date_after_start_date
+    if :start_date > :created_at && :end_date > :start_date
+    end
+  end
+
+
+
 end
