@@ -20,6 +20,13 @@
   </div>
 
   <div>
+    <%=f.label :categories  %>
+    <%=f.select "categories", options_from_collection_for_select(Category.all, "id", "tag"), {multiple: true, size: 3, prompt: "Select"} %>
+
+  </div>
+
+
+  <div>
     <%= f.label :start_date %>
     <%= f.date_field :start_date %>
   </div>

@@ -1,4 +1,10 @@
 <h1><%= @project.title %></h1>
+<h3> Categories </h3>
+<ul>
+  <% @project.categories.each do |cat| %>
+  <li> <%= cat.tag %></li>
+  <% end %>
+</ul>
 
 <% if @project.image.present? %>
   <%= image_tag @project.image %>
