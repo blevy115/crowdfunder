@@ -1,0 +1,9 @@
+<h1>Category: <%= @category.tag %></h1>
+
+
+<h2> Projects</h2>
+<ul>
+<% @category.projects.each do |project|  %>
+<li><%= link_to "#{project.title}", project_url(project.id) %></li>
+<%end %>
+</ul>

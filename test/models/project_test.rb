@@ -20,6 +20,60 @@ class ProjectTest < ActiveSupport::TestCase
     assert project.invalid?, 'Project should not save without owner.'
   end
 
+  def test_total_pledge
+    owner = new_user
+    owner.save
+    project = new_project
+    project.user = owner
+    project.save
+    pledger = another_user
+    pledger.save
+    pledge1 = Pledge.create(
+      dollar_amount: 99.00,
+      project: project,
+      user: pledger
+    )
+    pledge2 = Pledge.create(
+      dollar_amount: 99.00,
+      project: project,
+      user: pledger
+    )
+    expected = 198.00
+    actual = project.total_pledge
+    assert_equal(expected, actual)
+  end
+
+  def test_goal_positive
+    owner = new_user
+    owner.save
+    project = Project.new(
+      title:       'Cool new boardgame',
+      description: 'Trade sheep',
+      start_date:  Date.today,
+      end_date:    Date.today + 1.month,
+      goal:        0
+    )
+    project.user = owner
+    project.save
+    refute project.valid?
+  end
+
+  def test_project_many_categories
+    owner = new_user
+    owner.save
+    project = new_project
+    project.user = owner
+    project.save
+    category1 = new_category
+    category2 = another_category
+    category1.save
+    category2.save
+    project.categories << category1
+    project.categories << category2
+    assert project.valid?
+  end
+
+
   def new_project
     Project.new(
       title:       'Cool new boardgame',
@@ -40,4 +94,44 @@ class ProjectTest < ActiveSupport::TestCase
     )
   end
 
+  test 'time left displays days left' do
+    owner = new_user
+    owner.save
+    project = Project.new(
+      title:       'Cool new boardgame',
+      description: 'Trade sheep',
+      start_date: DateTime.now.utc,
+      end_date: DateTime.now.utc + 1.month,
+      goal:        50000,
+      user:        owner,
+    )
+    project.save
+
+    expected = "about 1 month"
+    actual = project.time_left
+
+    assert_equal expected, actual
+  end
+
+  def another_user
+    User.new(
+      first_name:            'James',
+      last_name:             'Lowenthal',
+      email:                 'james@example.com',
+      password:              'passpass',
+      password_confirmation: 'passpass'
+    )
+  end
+
+  def new_category
+    Category.new(
+      tag: "Art"
+    )
+  end
+
+  def another_category
+    Category.new(
+      tag: "Music"
+    )
+  end
 end
