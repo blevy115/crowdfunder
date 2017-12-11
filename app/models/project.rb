@@ -10,7 +10,7 @@ class Project < ActiveRecord::Base
   def before_start_date_after_start_date
   if :start_date > current_time && :end_date > :start_date
   else
-    project.errors.add(:start_date, :end_date,"date needs to be in the future", "date must be later then end date ")
+    project.errors.add(:start_date, :end_date, "date needs to be in the future", "date must be later then end date ")
   end
 
 
@@ -18,6 +18,6 @@ class Project < ActiveRecord::Base
   private
 
   def current_time
-    @current_time = Time.now
   end
+  current_time = Time.now
 end
