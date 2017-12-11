@@ -8,16 +8,11 @@ class Project < ActiveRecord::Base
   validate :before_start_date_after_start_date
 
   def before_start_date_after_start_date
-  if :start_date > current_time && :end_date > :start_date
-  else
-    project.errors.add(:start_date, :end_date, "date needs to be in the future", "date must be later then end date ")
+    if :start_date > :created_at && :end_date > :start_date
+    end
   end
 
 
 
-  private
 
-  def current_time
-  end
-  current_time = Time.now
 end
