@@ -5,13 +5,12 @@ class Pledge < ApplicationRecord
   validates :dollar_amount, presence: true
   validates :user, presence: true
 
-  validate :owner_cannot_back_own_project
+  validate :owner_should_not_pledge_own_project
 
-  def owner_cannot_back_own_project
-    if user == project.user
-      errors.add(:user, 'Owner should not be able to pledge towards own project')
+  def owner_should_not_pledge_own_project
+    unless user != project.user
+    errors.add(:project,'Owner should not be able to pledge towards own project')
     end
   end
-
 
 end
