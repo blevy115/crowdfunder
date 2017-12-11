@@ -29,7 +29,12 @@ class ProjectsController < ApplicationController
     @project.end_date = params[:project][:end_date]
     @project.image = params[:project][:image]
     @project.user_id = session[:user_id]
-    @project.categories = Category.where("id = ?", params[:project][:categories])
+    @project.categories = []
+    params[:project][:categories].each do |cat|
+    @project.categories << Category.where("id = ?", cat)
+    end
+
+
 
     if @project.save
       redirect_to projects_url
