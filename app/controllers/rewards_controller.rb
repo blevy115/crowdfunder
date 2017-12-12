@@ -28,7 +28,6 @@ class RewardsController < ApplicationController
     redirect_to project_url(@project)
    end
 
-
   private
 
   def load_project
