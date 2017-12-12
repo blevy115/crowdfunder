@@ -1,5 +1,4 @@
 ENV['RAILS_ENV'] ||= 'test'
-
 # To generate a test coverage report for the models,
 # instead of just the usual `rake` to run tests, use:
 # COVERAGE=true rake
@@ -16,6 +15,7 @@ require 'rails/test_help'
 
 # Include sorcery test helpers in controller tests
 class ActionController::TestCase
+  include FactoryBot::Syntax::Methods
   include Sorcery::TestHelpers::Rails::Integration
   include Sorcery::TestHelpers::Rails::Controller
 end
