@@ -42,8 +42,9 @@ class UserTest < ActiveSupport::TestCase
     assert_equal(expected, actual)
   end
 
-  test "new project with an owner" do
+  test "new project with an owner is an admin" do
     project = build(:project)
     assert project.user.valid?
+    assert project.user.admin
   end
 end
