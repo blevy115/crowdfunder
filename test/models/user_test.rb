@@ -8,7 +8,7 @@ class UserTest < ActiveSupport::TestCase
   test "email must be unique" do
     @user.email = "bettymaker@gmail.com"
     @user.save
-    user2 = bulid(:user)
+    user2 = build(:user)
     user2.email = "bettymaker@gmail.com"
     refute user2.valid?
   end
@@ -36,6 +36,14 @@ class UserTest < ActiveSupport::TestCase
     assert_equal(expected, actual)
   end
 
-  
+  test "full name displayes none if first and last name empty" do
+    expected = " "
+    actual = @user.full_name
+      assert_equal(expected, actual)
+  end
+
+  test "new project with an owner" do
+    project = build(:project)
+  end
 
 end
