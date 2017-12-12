@@ -28,5 +28,14 @@ class UserTest < ActiveSupport::TestCase
     refute user.valid?
   end
 
+  test "full name displays first and last names" do
+    @user.first_name = "john"
+    @user.last_name = "doe"
+    expected = "john doe"
+    actual = @user.full_name
+    assert_equal(expected, actual)
+  end
+
+  
 
 end
