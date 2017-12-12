@@ -12,7 +12,7 @@ class Project < ActiveRecord::Base
   validates :user, :title, :description, :goal, :start_date, :end_date, presence: true
   validates :goal, numericality: {greater_than: 0}
   validate :before_start_date_after_start_date
-  
+
   def total_pledge
   pledges = Pledge.where("project_id = ?", id)
   total_amount = pledges.pluck(:dollar_amount).sum
@@ -21,6 +21,7 @@ class Project < ActiveRecord::Base
 
   def before_start_date_after_start_date
     if :start_date > :created_at && :end_date > :start_date
+      errors.add(start_date: "project must be added before #{Date.now}", end_date: "project must have end date before #{:start_date}")
     end
   end
 
