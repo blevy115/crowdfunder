@@ -14,4 +14,8 @@ class Pledge < ApplicationRecord
     end
   end
 
+  def self.total
+    return sum("dollar_amount")
+  end
+
 end

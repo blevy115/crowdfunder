@@ -14,8 +14,9 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "user must include password_confirmation on create" do
-  user = build(:user, password: "12345678")
-  refute user.valid?
+
+    user = build(:user, password: "12345678")
+    refute user.valid?
   end
 
   test "password must match confirmation" do
@@ -23,27 +24,32 @@ class UserTest < ActiveSupport::TestCase
     refute user.valid?
   end
 
-  test "password must be longer than 8 characters" do
+
+  test "password must be at least 8 characters long" do
     user = build(:user, password: "1234", password_confirmation: "1234")
     refute user.valid?
   end
 
-  test "full name displays first and last names" do
-    @user.first_name = "john"
-    @user.last_name = "doe"
-    expected = "john doe"
+
+  test "full name displays first and last name" do
+    @user.first_name = "John"
+    @user.last_name = "Doe"
+    expected = "John Doe"
     actual = @user.full_name
     assert_equal(expected, actual)
   end
 
-  test "full name displayes none if first and last name empty" do
+
+  test "full name displays none if first and last name empty" do
     expected = " "
     actual = @user.full_name
-      assert_equal(expected, actual)
+    assert_equal(expected, actual)
   end
 
-  test "new project with an owner" do
+  test "new project with an owner is an admin" do
     project = build(:project)
+    assert project.user.valid?
+    assert project.user.admin
   end
 
 end

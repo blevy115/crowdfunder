@@ -1,5 +1,5 @@
 FactoryBot.define do
   factory :category do
-    projects {[association(:project)]}
+    projects { |p| [p.association(:project)] }
   end
 end

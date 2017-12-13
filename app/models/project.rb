@@ -36,4 +36,19 @@ class Project < ActiveRecord::Base
     return "#{(end_date > DateTime.now.utc) ? time_ago_in_words(end_date) : 'past deadline'}"
   end
 
+  def self.total_live
+    return where("start_date < ? AND end_date > ?", DateTime.now.utc, DateTime.now.utc).count
+  end
+
+  def self.total_funded
+    count = 0
+    all.each do |project|
+      if project.total_pledge >= project.goal
+        count += 1
+      end
+    end
+    return count
+  end
+
+
 end
