@@ -2,8 +2,9 @@ require 'test_helper'
 
 class ProjectTest < ActiveSupport::TestCase
   setup do
-     @project = build(:project)
+    @project = build(:project)
   end
+
 
   test 'valid project can be created' do
     @project.save
@@ -18,25 +19,27 @@ class ProjectTest < ActiveSupport::TestCase
     assert @project.invalid?, 'Project should not save without owner.'
   end
 
-  test "total_pledge" do
+  test 'total pledge' do
     @project.save
     pledge1 = create(:pledge,
-      dollar_amount: 100.00,
+      dollar_amount: 99.00,
       project: @project,
-  )
-
+    )
     pledge2 = create(:pledge,
-      dollar_amount: 20.00,
+      dollar_amount: 99.00,
       project: @project,
-)
-    assert_equal(120.00, @project.total_pledge)
+    )
+    expected = 198.00
+    actual = @project.total_pledge
+    assert_equal(expected, actual)
   end
 
-  test "goal_positive" do
+  test 'goal positive' do
     @project.goal = 0
     @project.save
-    assert @project.invalid?
+    refute @project.valid?
   end
+
 
   test 'new category has many projects' do
     category = build(:category)
@@ -55,7 +58,55 @@ class ProjectTest < ActiveSupport::TestCase
 
   test 'time left displays days left' do
     @project.save
-    assert_equal "12 days", @project.time_left
+    expected = "about 1 month"
+    actual = @project.time_left
+    assert_equal expected, actual
+  end
+
+  test 'total live projects show how many started' do
+    15.times do
+      create(:project)
+    end
+    expected = 15
+    actual = Project.total_live
+    assert_equal expected, actual
+  end
+
+  test 'total live does not count projects not started' do
+    @project.start_date = DateTime.now.utc + 5.days
+    @project.save
+    expected = 0
+    actual = Project.total_live
+    assert_equal expected, actual
+  end
+
+  test 'total live does not count projects ended' do
+    @project.start_date = DateTime.now.utc - 1.month
+    @project.end_date = DateTime.now.utc - 5.days
+    @project.save
+    expected = 0
+    actual = Project.total_live
+    assert_equal expected, actual
+  end
+
+  test 'total funded show those has reached past goal' do
+    @project.goal = 10_000
+    @project.save
+    3.times do
+      create(:pledge, project: @project, dollar_amount: 5_000)
+    end
+    expected = 1
+    actual = Project.total_funded
+    assert_equal expected, actual
+  end
+
+  test 'total funded does not add ones not reach goal' do
+    @project.goal = 10_000
+    @project.save
+    create(:pledge, project: @project, dollar_amount: 5_000)
+    expected = 0
+    actual = Project.total_funded
+    assert_equal expected, actual
   end
 
 end

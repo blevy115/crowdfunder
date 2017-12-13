@@ -2,41 +2,55 @@ require 'test_helper'
 
 class UserTest < ActiveSupport::TestCase
   setup do
-  @user = build(:user)
+    @user = build(:user)
   end
 
   test "email must be unique" do
-
-    user1 = create(:user, email: "bettymaker@gmail.com")
-    user2 = build(:user, email: "bettymaker@gmail.com")
+    @user.email = "bettymaker@gmail.com"
+    @user.save
+    user2 = build(:user)
+    user2.email = "bettymaker@gmail.com"
     refute user2.valid?
   end
 
   test "user must include password_confirmation on create" do
-    user = build(:user)
-    assert user.password_confirmation
+
+    user = build(:user, password: "12345678")
+    refute user.valid?
   end
 
   test "password must match confirmation" do
-    assert_equal(@user.password, @user.password_confirmation)
+    user = build(:user, password: "12345678", password_confirmation: "87654321")
+    refute user.valid?
   end
+
 
   test "password must be at least 8 characters long" do
-    user = build(:user, password:"1234567")
-    assert user.invalid?
+    user = build(:user, password: "1234", password_confirmation: "1234")
+    refute user.valid?
   end
 
+
   test "full name displays first and last name" do
-    user = build(:user, first_name: "foo", last_name: "bar")
-    assert_equal("foo bar", user.full_name)
+    @user.first_name = "John"
+    @user.last_name = "Doe"
+    expected = "John Doe"
+    actual = @user.full_name
+    assert_equal(expected, actual)
   end
+
 
   test "full name displays none if first and last name empty" do
     user = build(:user, first_name: "",last_name: "" )
     expected = " "
-    actual = user.full_name
+    actual = @user.full_name
     assert_equal(expected, actual)
   end
 
+  test "new project with an owner is an admin" do
+    project = build(:project)
+    assert project.user.valid?
+    assert project.user.admin
+  end
 
 end

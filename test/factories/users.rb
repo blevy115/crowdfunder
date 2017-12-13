@@ -1,8 +1,8 @@
 FactoryBot.define do
   factory :user do
-    password "12345678"
-    password_confirmation "12345678"
-    sequence(:email) { |n| "person#{n}@example.com" }
+    password "password"
+    password_confirmation "password"
+    sequence(:email) { |n| "person#{n}@unique.com" }
   end
 
   factory :admin, parent: :user do
@@ -10,4 +10,5 @@ FactoryBot.define do
     last_name  "User"
     admin      true
   end
+
 end

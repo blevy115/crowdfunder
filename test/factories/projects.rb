@@ -1,12 +1,10 @@
 FactoryBot.define do
-
   factory :project do
-
-    title "foo"
-    description "bar"
-    goal 1000
-    start_date { 2.days.from_now }
-    end_date { 12.days.from_now }
     association :user, factory: :admin
+    title "Best project ever!"
+    description Faker::Lorem.paragraph
+    goal 100000
+    start_date DateTime.now.utc
+    end_date DateTime.now.utc + 1.month
   end
 end
