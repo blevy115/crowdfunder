@@ -45,6 +45,13 @@
   <%end %>
 </ul>
 
+<h2>Rewards Claimed </h2>
+<ul>
+  <%@user.rewards.each do |reward|  %>
+  <li>I have claimed the reward <%= Reward.find_by(id:reward.id).description %></li>
+  <%end %>
+</ul>
+
 <h2> Projects Owned </h2>
   <ul>
     <%owned = Project.where("user_id = ?", @user.id) %>

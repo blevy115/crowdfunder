@@ -31,10 +31,12 @@ class RewardsController < ApplicationController
 
    def claim_reward
      @reward = Reward.find(params[:id])
+     @user = current_user
      puts @reward.inspect
      if @reward.limit >= 1
        @reward.limit -= 1
        @reward.save
+       @user.rewards << @reward
        puts @reward.limit
        redirect_to root_url
      else

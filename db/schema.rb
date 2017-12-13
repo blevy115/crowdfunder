@@ -10,8 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-
-ActiveRecord::Schema.define(version: 20171213002531) do
+ActiveRecord::Schema.define(version: 20171213182424) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -65,6 +64,13 @@ ActiveRecord::Schema.define(version: 20171213002531) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer "limit"
+  end
+
+  create_table "rewards_users", id: false, force: :cascade do |t|
+    t.bigint "reward_id"
+    t.bigint "user_id"
+    t.index ["reward_id"], name: "index_rewards_users_on_reward_id"
+    t.index ["user_id"], name: "index_rewards_users_on_user_id"
   end
 
   create_table "users", id: :serial, force: :cascade do |t|
