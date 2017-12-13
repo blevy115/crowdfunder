@@ -1,5 +1,5 @@
 class RewardsController < ApplicationController
-  before_action :load_project
+  before_action :load_project, except: :claim_reward
 
   def new
     @reward = Reward.new
@@ -9,6 +9,7 @@ class RewardsController < ApplicationController
     @reward = @project.rewards.build
     @reward.dollar_amount = params[:reward][:dollar_amount]
     @reward.description = params[:reward][:description]
+    @reward.limit = params[:reward][:limit]
 
     if @reward.save
       redirect_to project_url(@project), notice: 'Reward created'
@@ -28,9 +29,26 @@ class RewardsController < ApplicationController
     redirect_to project_url(@project)
    end
 
+   def claim_reward
+     @reward = Reward.find(params[:id])
+     puts @reward.inspect
+     if @reward.limit >= 1
+       @reward.limit -= 1
+       @reward.save
+       puts @reward.limit
+       redirect_to root_url
+     else
+       flash[:alert] = "No more of this reward"
+       redirect_to user_path(current_user)
+     end
+   end
+
   private
 
   def load_project
     @project = Project.find(params[:project_id])
   end
+
+
+
 end

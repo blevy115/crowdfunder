@@ -20,10 +20,26 @@
 
 <p> I have pledged <%= total_of_pledges %> $ total on this website</p>
 
+<h2> Rewards </h2>
+<ul>
+  <%pledges = Pledge.where("user_id = ?", @user.id).order(dollar_amount: :desc) %>
+  <%projects = [] %>
+  <%pledges.each do |pledge| %>
+  <%project = Project.find_by(id: pledge.project.id) %>
+  <%if projects.exclude?(project) %>
+  <% project.rewards.each do |reward| %>
+  <%if pledge.dollar_amount >= reward.dollar_amount %>
+  <li>You are elligible to claim
+    <%= button_to "#{reward.description}", claim_path(reward.id) %> from <%= project.title %></li>
+  <%end %>
+  <%end %>
+  <%end %>
+  <%projects << project %>
+  <%end %>
+</ul>
 <h2> Projects Owned </h2>
   <ul>
     <%owned = Project.where("user_id = ?", @user.id) %>
     <%owned.each do |project| %>
     <li>I own project <%= project.title %> </li>
     <%end %>
-  </ul>
