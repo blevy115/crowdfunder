@@ -17,7 +17,7 @@ class PledgesController < ApplicationController
         end
       end
       if @claimable.count > 0
-      flash[:alert] = "New Rewards avaiable on profile page"
+      flash[:alert] = " Rewards available to be claimed on Profile page"
       end
       redirect_to project_url(@project)
 

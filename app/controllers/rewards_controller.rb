@@ -42,12 +42,8 @@ class RewardsController < ApplicationController
        @reward.limit -= 1
        @reward.save
        @user.rewards << @reward
-
-       # puts "-------"
-       # puts Pledge.where('project_id = ? and dollar_amount >= ?', project.id, @reward.dollar_amount).order('dollar_amount')
-       # puts "--------"
-       # Pledge.where('project_id = ? and dollar_amount >= ?', project.id, @reward.dollar_amount).order('dollar_amount').first.delete
        redirect_to user_path(current_user)
+
      else
        flash[:alert] = "No more of this reward"
        redirect_to user_path(current_user)
