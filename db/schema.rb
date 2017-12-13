@@ -10,6 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+
 ActiveRecord::Schema.define(version: 20171213002531) do
 
   # These are extensions that must be enabled in order to support this database
@@ -63,6 +64,7 @@ ActiveRecord::Schema.define(version: 20171213002531) do
     t.float "dollar_amount"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer "limit"
   end
 
   create_table "users", id: :serial, force: :cascade do |t|
