@@ -35,21 +35,17 @@
 
 <h2> Rewards </h2>
 <ul>
-  <%pledges = Pledge.where("user_id = ?", @user.id).order(dollar_amount: :desc) %>
-  <%projects = [] %>
-  <%pledges.each do |pledge| %>
-  <%project = Project.find_by(id: pledge.project.id) %>
-  <%if projects.exclude?(project) %>
-  <% project.rewards.each do |reward| %>
-  <%if pledge.dollar_amount >= reward.dollar_amount %>
+  <%project_total.each do |project, total| %>
+  <%single_project = Project.find_by(title: project) %>
+  <% single_project.rewards.each do |reward| %>
+  <%if total >= reward.dollar_amount %>
   <li>You are elligible to claim <%= reward.description %>
-   from <%= project.title %>.   <%= button_to "Click Here", claim_path(reward.id) %></li>
+   from <%= project %>.   <%= button_to "Click Here", claim_path(reward.id) %></li>
   <%end %>
   <%end %>
-  <%end %>
-  <%projects << project %>
   <%end %>
 </ul>
+
 <h2> Projects Owned </h2>
   <ul>
     <%owned = Project.where("user_id = ?", @user.id) %>
