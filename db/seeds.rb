@@ -2,6 +2,12 @@ Pledge.destroy_all
 Reward.destroy_all
 User.destroy_all
 Project.destroy_all
+Category.destroy_all
+
+
+Category.create(tag: "Music")
+Category.create(tag: "TV")
+Category.create(tag: "Art")
 
 5.times do
   user = User.create!(
