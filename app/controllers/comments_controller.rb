@@ -19,8 +19,8 @@ class CommentsController < ApplicationController
     @comment.user_id = current_user.id
 
     if @comment.save
-      flash[:success] = "comment added to #{@comment.project.name}"
-      redirect_to user_url
+      flash[:success] = "comment added to #{@project.title}"
+      redirect_to project_url(@project)
     else
         flash.now[:alert] = "Sorry, there was a problem adding your comment"
         render 'projects'

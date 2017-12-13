@@ -58,6 +58,12 @@
 
 <%= link_to "Add new reward", new_project_reward_path(@project) %>
 
+<p>
+  <%= form_for [@project, Comment.new] do |f| %>
+  <%= f.text_area :reviews %>
+  <%= f.submit  %>
+</p>
+<% end %>
 
-
-<p><%= link_to 'edit comment', edit_project_comment_path(@project, @comment) %></p>
+<h2>Previous Comments</h2>
+<%=  @project.comments.each{|com| com.review}%>
