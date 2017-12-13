@@ -38,7 +38,7 @@ class RewardsController < ApplicationController
        @reward.save
        @user.rewards << @reward
        puts @reward.limit
-       redirect_to root_url
+       redirect_to user_path(current_user)
      else
        flash[:alert] = "No more of this reward"
        redirect_to user_path(current_user)
