@@ -10,7 +10,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171210224616) do
+
+ActiveRecord::Schema.define(version: 20171213002531) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -26,6 +27,13 @@ ActiveRecord::Schema.define(version: 20171210224616) do
     t.bigint "project_id"
     t.index ["category_id"], name: "index_categories_projects_on_category_id"
     t.index ["project_id"], name: "index_categories_projects_on_project_id"
+  end
+
+  create_table "comments", id: false, force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "project_id", null: false
+    t.datetime "date_posted"
+    t.text "reviews"
   end
 
   create_table "pledges", id: :serial, force: :cascade do |t|
@@ -56,6 +64,7 @@ ActiveRecord::Schema.define(version: 20171210224616) do
     t.float "dollar_amount"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer "limit"
   end
 
   create_table "users", id: :serial, force: :cascade do |t|

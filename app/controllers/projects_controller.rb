@@ -13,6 +13,9 @@ class ProjectsController < ApplicationController
 
   def show
     @project = Project.find(params[:id])
+    @claimable = @claimable
+    @comment = Comment.all
+
   end
 
   def new

@@ -4,14 +4,16 @@ Rails.application.routes.draw do
   get 'login' => 'user_sessions#new', :as => :login
   delete 'logout' => 'user_sessions#destroy', :as => :logout
 
+  post 'rewards(/:id)', to: 'rewards#claim_reward', :as => :claim 
+
   resources :categories
   resources :projects, only: [:index, :new, :create, :show] do
     resources :pledges, only: [:create]
     resources :rewards, only: [:new, :create, :destroy]
+    resources :comments, only: [:new, :create, :edit, :update, :destroy] 
   end
   resources :users, only: [:new, :create, :show]
   resources :user_sessions, only: [:create]
-
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

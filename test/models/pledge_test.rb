@@ -2,47 +2,39 @@ require_relative '../test_helper'
 
 class PledgeTest < ActiveSupport::TestCase
 
+
+  setup do
+    @pledge = build(:pledge)
+    @project = @pledge.project
+  end
+
   test 'A pledge can be created' do
-    pledge = Pledge.create(
-      dollar_amount: 99.00,
-      project: new_project,
-      user: new_user
-    )
-    pledge.save
-    assert pledge.valid?
-    assert pledge.persisted?
+    @pledge.save
+    assert @pledge.valid?
+    assert @pledge.persisted?
   end
 
   test 'owner cannot back own project' do
-    owner = new_user
-    owner.save
-    project = new_project
-    project.user = owner
-    project.save
-    pledge = Pledge.new(dollar_amount: 3.00, project: project)
-    pledge.user = owner
-    pledge.save
-    assert pledge.invalid?, 'Owner should not be able to pledge towards own project'
+    @pledge.user = @project.user
+    @pledge.save
+    assert @pledge.invalid?, 'Owner should not be able to pledge towards own project'
   end
 
-  def new_project
-    Project.new(
-      title:       'Cool new boardgame',
-      description: 'Trade sheep',
-      start_date:  Date.today,
-      end_date:    Date.today + 1.month,
-      goal:        50000
-    )
+  test 'total shows sum of pledges for all projects' do
+    5.times do
+      create(:pledge)
+    end
+    2.times do
+      create(:pledge, dollar_amount: 100)
+    end
+    expected = 250
+    actual = Pledge.total
+    assert_equal expected, actual
   end
 
-  def new_user
-    User.new(
-      first_name:            'Sally',
-      last_name:             'Lowenthal',
-      email:                 'sally@example.com',
-      password:              'passpass',
-      password_confirmation: 'passpass'
-    )
+  test 'total shows 0 when no pledges' do
+    expected = 0
+    actual = Pledge.total
+    assert_equal expected, actual
   end
-
 end
