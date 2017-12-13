@@ -12,9 +12,9 @@
   <%total_of_pledges += pledge.dollar_amount %>
   <%project = Project.find_by("id = ?", pledge.project_id) %>
     <%if projects_pledged.include?(pledge.project_id) %>
-    <%project_total[project.title] += pledge.dollar_amount %>
+    <%project_total[project.title][0] += pledge.dollar_amount %>
     <%else  %>
-    <%project_total[project.title] = pledge.dollar_amount %>
+    <%project_total[project.title] = [pledge.dollar_amount, project.id] %>
     <%end %>
 
   <% unless projects_pledged.include?(pledge.project_id) %>
@@ -26,7 +26,7 @@
 
   <ul>
   <%project_total.each do |project, total| %>
-    <li>I have pledged $<%= total %> towards project <%= project %></li>
+    <li>I have pledged $<%= total[0] %> towards project: <%= link_to "#{project}", project_path(total[1]) %></li>
     <%end %>
   </ul>
 
@@ -38,9 +38,9 @@
   <%project_total.each do |project, total| %>
   <%single_project = Project.find_by(title: project) %>
   <% single_project.rewards.each do |reward| %>
-  <%if total >= reward.dollar_amount %>
+  <%if total[0] >= reward.dollar_amount %>
   <li>You are elligible to claim <%= reward.description %>
-   from <%= project %>.   <%= button_to "Click Here", claim_path(reward.id) %></li>
+   from project: <%= link_to "#{project}", project_path(single_project.id) %>.   <%= button_to "Click Here", claim_path(reward.id) %></li>
   <%end %>
   <%end %>
   <%end %>
