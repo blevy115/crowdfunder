@@ -2,136 +2,111 @@ require 'test_helper'
 
 class ProjectTest < ActiveSupport::TestCase
 
+  setup do
+    @project = build(:project)
+  end
+
   test 'valid project can be created' do
-    owner = new_user
-    owner.save
-    project = new_project
-    project.user = owner
-    project.save
-    assert project.valid?
-    assert project.persisted?
-    assert project.user
+    @project.save
+    assert @project.valid?
+    assert @project.persisted?
+    assert @project.user
   end
 
   test 'project is invalid without owner' do
-    project = new_project
-    project.user = nil
-    project.save
-    assert project.invalid?, 'Project should not save without owner.'
+    @project.user = nil
+    @project.save
+    assert @project.invalid?, 'Project should not save without owner.'
   end
 
-  def test_total_pledge
-    owner = new_user
-    owner.save
-    project = new_project
-    project.user = owner
-    project.save
-    pledger = another_user
-    pledger.save
-    pledge1 = Pledge.create(
+  test 'total pledge' do
+    @project.save
+    pledge1 = create(:pledge,
       dollar_amount: 99.00,
-      project: project,
-      user: pledger
+      project: @project,
     )
-    pledge2 = Pledge.create(
+    pledge2 = create(:pledge,
       dollar_amount: 99.00,
-      project: project,
-      user: pledger
+      project: @project,
     )
     expected = 198.00
-    actual = project.total_pledge
+    actual = @project.total_pledge
     assert_equal(expected, actual)
   end
 
-  def test_goal_positive
-    owner = new_user
-    owner.save
-    project = Project.new(
-      title:       'Cool new boardgame',
-      description: 'Trade sheep',
-      start_date:  Date.today,
-      end_date:    Date.today + 1.month,
-      goal:        0
-    )
-    project.user = owner
-    project.save
-    refute project.valid?
+  test 'goal positive' do
+    @project.goal = 0
+    @project.save
+    refute @project.valid?
   end
 
-  def test_project_many_categories
-    owner = new_user
-    owner.save
-    project = new_project
-    project.user = owner
-    project.save
-    category1 = new_category
-    category2 = another_category
-    category1.save
-    category2.save
-    project.categories << category1
-    project.categories << category2
-    assert project.valid?
+  test 'new category has many projects' do
+    category = build(:category)
+    assert category.valid?
+    refute_nil category.projects
   end
 
-
-  def new_project
-    Project.new(
-      title:       'Cool new boardgame',
-      description: 'Trade sheep',
-      start_date:  Date.today,
-      end_date:    Date.today + 1.month,
-      goal:        50000
-    )
-  end
-
-  def new_user
-    User.new(
-      first_name:            'Sally',
-      last_name:             'Lowenthal',
-      email:                 'sally@example.com',
-      password:              'passpass',
-      password_confirmation: 'passpass'
-    )
+  test 'project many categories' do
+    @project.save
+    category1 = create(:category, tag: "movie")
+    category2 = create(:category, tag: "game")
+    @project.categories << category1
+    @project.categories << category2
+    assert @project.valid?
   end
 
   test 'time left displays days left' do
-    owner = new_user
-    owner.save
-    project = Project.new(
-      title:       'Cool new boardgame',
-      description: 'Trade sheep',
-      start_date: DateTime.now.utc,
-      end_date: DateTime.now.utc + 1.month,
-      goal:        50000,
-      user:        owner,
-    )
-    project.save
+    @project.save
 
     expected = "about 1 month"
-    actual = project.time_left
-
+    actual = @project.time_left
     assert_equal expected, actual
   end
 
-  def another_user
-    User.new(
-      first_name:            'James',
-      last_name:             'Lowenthal',
-      email:                 'james@example.com',
-      password:              'passpass',
-      password_confirmation: 'passpass'
-    )
+  test 'total live projects show how many started' do
+    15.times do
+      create(:project)
+    end
+    expected = 15
+    actual = Project.total_live
+    assert_equal expected, actual
   end
 
-  def new_category
-    Category.new(
-      tag: "Art"
-    )
+  test 'total live does not count projects not started' do
+    @project.start_date = DateTime.now.utc + 5.days
+    @project.save
+    expected = 0
+    actual = Project.total_live
+    assert_equal expected, actual
   end
 
-  def another_category
-    Category.new(
-      tag: "Music"
-    )
+  test 'total live does not count projects ended' do
+    @project.start_date = DateTime.now.utc - 1.month
+    @project.end_date = DateTime.now.utc - 5.days
+    @project.save
+    expected = 0
+    actual = Project.total_live
+    assert_equal expected, actual
   end
+
+  test 'total funded show those has reached past goal' do
+    @project.goal = 10_000
+    @project.save
+    3.times do
+      create(:pledge, project: @project, dollar_amount: 5_000)
+    end
+    expected = 1
+    actual = Project.total_funded
+    assert_equal expected, actual
+  end
+
+  test 'total funded does not add ones not reach goal' do
+    @project.goal = 10_000
+    @project.save
+    create(:pledge, project: @project, dollar_amount: 5_000)
+    expected = 0
+    actual = Project.total_funded
+    assert_equal expected, actual
+  end
+
 end
