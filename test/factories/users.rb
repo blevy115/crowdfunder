@@ -10,4 +10,5 @@ FactoryBot.define do
     last_name  "User"
     admin      true
   end
+  
 end

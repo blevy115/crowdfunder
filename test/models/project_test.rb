@@ -2,9 +2,11 @@ require 'test_helper'
 
 class ProjectTest < ActiveSupport::TestCase
 
+
   setup do
     @project = build(:project)
   end
+
 
   test 'valid project can be created' do
     @project.save
@@ -39,6 +41,7 @@ class ProjectTest < ActiveSupport::TestCase
     @project.save
     refute @project.valid?
   end
+
 
   test 'new category has many projects' do
     category = build(:category)

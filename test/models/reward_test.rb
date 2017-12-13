@@ -9,12 +9,14 @@ class RewardTest < ActiveSupport::TestCase
 
   test 'A reward can be created' do
     @reward.save
+
     assert @reward.valid?
     assert @reward.persisted?
   end
 
   test 'A reward cannot be created without a dollar amount' do
     @reward.dollar_amount = nil
+
     @reward.save
     assert @reward.invalid?, 'Reward should be invalid without dollar amount'
     assert @reward.new_record?, 'Reward should not save without dollar amount'

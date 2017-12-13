@@ -5,6 +5,7 @@ include ActionView::Helpers::DateHelper
 class Project < ActiveRecord::Base
   has_many :rewards
   has_many :pledges
+  has_many :comments
   has_many :users, through: :pledges # backers
   belongs_to :user # project owner
   has_and_belongs_to_many :categories
@@ -21,6 +22,7 @@ class Project < ActiveRecord::Base
 
   def before_start_date_after_start_date
     if :start_date > :created_at && :end_date > :start_date
+      errors.add(start_date: "project must be added before #{Date.now}", end_date: "project must have end date before #{:start_date}")
     end
   end
 

@@ -2,6 +2,7 @@ require_relative '../test_helper'
 
 class PledgeTest < ActiveSupport::TestCase
 
+
   setup do
     @pledge = build(:pledge)
     @project = @pledge.project
@@ -36,5 +37,4 @@ class PledgeTest < ActiveSupport::TestCase
     actual = Pledge.total
     assert_equal expected, actual
   end
-
 end
