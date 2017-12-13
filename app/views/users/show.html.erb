@@ -29,8 +29,8 @@
   <%if projects.exclude?(project) %>
   <% project.rewards.each do |reward| %>
   <%if pledge.dollar_amount >= reward.dollar_amount %>
-  <li>You are elligible to claim
-    <%= button_to "#{reward.description}", claim_path(reward.id) %> from <%= project.title %></li>
+  <li>You are elligible to claim <%= reward.description %>
+   from <%= project.title %>.   <%= button_to "Click Here", claim_path(reward.id) %></li>
   <%end %>
   <%end %>
   <%end %>
