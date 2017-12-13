@@ -63,5 +63,50 @@ class ProjectTest < ActiveSupport::TestCase
     assert_equal expected, actual
   end
 
+  test 'total live projects show how many started' do
+    15.times do
+      create(:project)
+    end
+    expected = 15
+    actual = Project.total_live
+    assert_equal expected, actual
+  end
+
+  test 'total live does not count projects not started' do
+    @project.start_date = DateTime.now.utc + 5.days
+    @project.save
+    expected = 0
+    actual = Project.total_live
+    assert_equal expected, actual
+  end
+
+  test 'total live does not count projects ended' do
+    @project.start_date = DateTime.now.utc - 1.month
+    @project.end_date = DateTime.now.utc - 5.days
+    @project.save
+    expected = 0
+    actual = Project.total_live
+    assert_equal expected, actual
+  end
+
+  test 'total funded show those has reached past goal' do
+    @project.goal = 10_000
+    @project.save
+    3.times do
+      create(:pledge, project: @project, dollar_amount: 5_000)
+    end
+    expected = 1
+    actual = Project.total_funded
+    assert_equal expected, actual
+  end
+
+  test 'total funded does not add ones not reach goal' do
+    @project.goal = 10_000
+    @project.save
+    create(:pledge, project: @project, dollar_amount: 5_000)
+    expected = 0
+    actual = Project.total_funded
+    assert_equal expected, actual
+  end
 
 end
