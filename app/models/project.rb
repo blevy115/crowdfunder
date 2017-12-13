@@ -5,6 +5,7 @@ include ActionView::Helpers::DateHelper
 class Project < ActiveRecord::Base
   has_many :rewards
   has_many :pledges
+  has_many :comments
   has_many :users, through: :pledges # backers
   belongs_to :user # project owner
   has_and_belongs_to_many :categories
