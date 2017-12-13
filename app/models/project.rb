@@ -5,6 +5,7 @@ include ActionView::Helpers::DateHelper
 class Project < ActiveRecord::Base
   has_many :rewards
   has_many :pledges
+  has_many :comments
   has_many :users, through: :pledges # backers
   belongs_to :user # project owner
   has_and_belongs_to_many :categories
@@ -12,7 +13,7 @@ class Project < ActiveRecord::Base
   validates :user, :title, :description, :goal, :start_date, :end_date, presence: true
   validates :goal, numericality: {greater_than: 0}
   validate :before_start_date_after_start_date
-  
+
   def total_pledge
   pledges = Pledge.where("project_id = ?", id)
   total_amount = pledges.pluck(:dollar_amount).sum
@@ -21,6 +22,7 @@ class Project < ActiveRecord::Base
 
   def before_start_date_after_start_date
     if :start_date > :created_at && :end_date > :start_date
+      errors.add(start_date: "project must be added before #{Date.now}", end_date: "project must have end date before #{:start_date}")
     end
   end
 
@@ -33,5 +35,20 @@ class Project < ActiveRecord::Base
 
     return "#{(end_date > DateTime.now.utc) ? time_ago_in_words(end_date) : 'past deadline'}"
   end
+
+  def self.total_live
+    return where("start_date < ? AND end_date > ?", DateTime.now.utc, DateTime.now.utc).count
+  end
+
+  def self.total_funded
+    count = 0
+    all.each do |project|
+      if project.total_pledge >= project.goal
+        count += 1
+      end
+    end
+    return count
+  end
+
 
 end

@@ -1,6 +1,7 @@
 FactoryBot.define do
   factory :reward do
-    description 'My reward'
-    dollar_amount 50
+    description Faker::Superhero.power
+    dollar_amount 100
+    project
   end
 end

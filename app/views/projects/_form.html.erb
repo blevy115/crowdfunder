@@ -39,8 +39,8 @@
     <% Category.all.each do |category| %>
       <%= f.check_box :categories, { multiple: true }, category.id %>
       <%= f.label category.tag %>
-
     <% end %>
+    
   </div>
   <div>
     <%= f.label :start_date %>
