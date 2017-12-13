@@ -1,5 +1,6 @@
 <h1>This is <%= @user.full_name %>'s page</h1>
 
+<%if @user == current_user %>
 <h2>Projects Backed</h2>
 
   <%pledges = Pledge.where("user_id = ?", @user.id) %>
@@ -39,7 +40,7 @@
   <% single_project.rewards.each do |reward| %>
   <%if total[0] >= reward.dollar_amount %>
   <li>You are elligible to claim <%= reward.description %>
-   from project: <%= link_to "#{project}", project_path(single_project.id) %>.   <%= button_to "Click Here", claim_path(reward.id) %></li>
+   from project: <%= link_to "#{project}", project_path(single_project.id) %>   <%= button_to "Click Here", claim_path(reward.id) %></li>
   <%end %>
   <%end %>
   <%end %>
@@ -51,10 +52,15 @@
   <li>I have claimed the reward <%= Reward.find_by(id:reward.id).description %></li>
   <%end %>
 </ul>
+<%end %>
 
 <h2> Projects Owned </h2>
   <ul>
     <%owned = Project.where("user_id = ?", @user.id) %>
     <%owned.each do |project| %>
-    <li>I own project <%= project.title %> </li>
+    <% if current_user && (project.user_id == current_user.id) %>
+    <li>I own project <%= link_to "#{project.title}", project_path(project.id) %> </li>
+    <%else %>
+    <li>They own project <%= link_to "#{project.title}", project_path(project.id) %> </li>
     <%end %>
+    <% end %>

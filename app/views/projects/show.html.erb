@@ -55,8 +55,9 @@
   </p>
   <%end %>
 <% end %>
-
+<% if current_user && (@project.user_id == current_user.id) %>
 <%= link_to "Add new reward", new_project_reward_path(@project) %>
+<%end %>
 
 
 
