@@ -1,5 +1,5 @@
 FactoryBot.define do
   factory :category do
-    tag "music"
+    projects { |p| [p.association(:project)]}
   end
 end

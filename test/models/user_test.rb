@@ -27,9 +27,8 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "full name displays first and last name" do
-    expected = @user.first_name + " " + @user.last_name
-    actual = @user.full_name
-    assert_equal(expected, actual)
+    user = build(:user, first_name: "foo", last_name: "bar")
+    assert_equal("foo bar", user.full_name)
   end
 
   test "full name displays none if first and last name empty" do
