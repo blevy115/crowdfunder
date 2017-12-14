@@ -1,5 +1,18 @@
 class CommentsController < ApplicationController
-  before_action :ensure_logged_in
+  before_action :load_project
+  before_action :require_login
+  before_action :ensure_user_owns_comment, only: [:edit, :update, :destroy]
+
+  def load_project
+    @project = Project.find(params[:project_id])
+  end
+
+  def ensure_user_owns_comment
+    unless current_user == Comment.find(params[:id]).user
+      flash[:alert] = "You are not authorized to edit this comment!"
+      redirect_to project_url(@project)
+    end
+  end
 
   def show
     @comment = Comment.all
@@ -7,14 +20,11 @@ class CommentsController < ApplicationController
 
   def new
     @comment = Comment.new
-    @project = Project.find(params[:project_id])
   end
 
   def create
     @comment = Comment.new
-    @project = Project.find(params[:project_id])
-    @comment.reviews = params[:comment][:reviews]
-    @comment.date_posted = params[:comment][:date_posted]
+    @comment.content = params[:comment][:content]
     @comment.project_id = params[:project_id]
     @comment.user_id = current_user.id
 
@@ -22,29 +32,29 @@ class CommentsController < ApplicationController
       flash[:success] = "comment added to #{@project.title}"
       redirect_to project_url(@project)
     else
-        flash.now[:alert] = "Sorry, there was a problem adding your comment"
-        render 'projects'
+      flash[:alert] = "Sorry, there was a problem adding your comment"
+      redirect_to project_url(@project)
     end
   end
 
   def edit
-    @comments = current_user.comments
+    @comment = Comment.find(params[:id])
     @project = Project.find(params[:project_id])
   end
-
 
   def update
     @project = Project.find(params[:project_id])
     @comment = Comment.find(params[:id])
-    @comment.text = params[:comment][:text]
-    @comment.date_posted = params[:comment][:date_posted]
+    @comment.content = params[:content]
+    @comment.project_id = params[:project_id]
+    @comment.user_id = current_user.id
 
     if @comment.save
-      flash[:success] = "Your comment has been updated for #{@comment.project.name}"
-      redirect_to root_url
+      flash[:success] = "Your comment has been updated for #{@comment.project.title}"
+      redirect_to project_url(@project)
     else
-        flash.now[:alert] = "Sorry, there was a problem updating your comment"
-        render 'projects'
+      flash[:alert] = "Sorry, there was a problem updating your comment"
+      redirect_to project_url
     end
   end
 
@@ -53,14 +63,6 @@ class CommentsController < ApplicationController
     @comment.destroy
     flash[:notice] = "You have successfully deleted your comment"
     redirect_to projects_url
-
   end
 
-
-  def ensure_logged_in
-    unless current_user
-      flash[:alert] = "You must be logged in to comment"
-      redirect_to projects_url
-    end
-  end
 end
