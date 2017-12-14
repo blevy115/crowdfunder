@@ -39,7 +39,11 @@
 <ul>
     <%pledge_left = {} %>
   <% @project_total.each do |(k,v)| %>
+  <%if @total_reward[k] %>
     <%pledge_left[k] = v[0] - @total_reward[k]%>
+    <%else %>
+    <%pledge_left[k] = v[0]%>
+    <%end %>
   <%end %>
     <%pledge_left.each do |project, amount| %>
       <% if amount > 0 %>
