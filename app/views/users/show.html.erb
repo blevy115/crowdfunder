@@ -33,7 +33,7 @@
     <%end %>
   <%end %>
 </ul>
-
+<%if @user.rewards.count > 0 %>
 <h2> Pledge Money left after rewards </h2>
 
 <ul>
@@ -47,7 +47,7 @@
       <%end %>
     <%end %>
 </ul>
-
+<%end %>
 <h2>Rewards Claimed </h2>
 
 <ul>
