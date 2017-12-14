@@ -45,8 +45,8 @@
 
 <h2>Rewards</h2>
 <% @project.rewards.each do |reward| %>
-  <p><%= number_to_currency(reward.dollar_amount) %></p>
-  <p><%= reward.description %></p>
+  <p><%= number_to_currency(reward.dollar_amount) %>
+  <%= reward.description %> x <%= reward.limit %> left</p>
   <%if @project.user == current_user %>
   <p>
     <small>
@@ -55,8 +55,9 @@
   </p>
   <%end %>
 <% end %>
-
+<% if current_user && (@project.user_id == current_user.id) %>
 <%= link_to "Add new reward", new_project_reward_path(@project) %>
+<%end %>
 
 <h4>Add An Comment</h4>
 <p>

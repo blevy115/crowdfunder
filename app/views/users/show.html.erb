@@ -1,53 +1,71 @@
 <h1>This is <%= @user.full_name %>'s page</h1>
 
+<%if @user == current_user %>
 <h2>Projects Backed</h2>
-
-  <%pledges = Pledge.where("user_id = ?", @user.id) %>
-  <%total_of_pledges = 0%>
-  <%projects_pledged = []%>
-   <!-- Used to remove duplicate projects -->
-  <%project_total = {} %>
-  <%pledges.each do |pledge| %>
-  <%total_of_pledges += pledge.dollar_amount %>
-  <%project = Project.find_by("id = ?", pledge.project_id) %>
-    <%if projects_pledged.include?(pledge.project_id) %>
-    <%project_total[project.title][0] += pledge.dollar_amount %>
-    <%else  %>
-    <%project_total[project.title] = [pledge.dollar_amount, project.id] %>
-    <%end %>
-
-  <% unless projects_pledged.include?(pledge.project_id) %>
-  <%projects_pledged << pledge.project_id %>
-    <!-- I have backed project <%= project.title %> -->
-
-  <%end %>
-  <%end %>
+<%@user.user_pledges%>
 
   <ul>
-  <%project_total.each do |project, total| %>
+  <%@project_total.each do |project, total| %>
+  <%if total[0] > 0 %>
     <li>I have pledged $<%= total[0] %> towards project: <%= link_to "#{project}", project_path(total[1]) %></li>
-    <%end %>
+  <% end %>
+  <% end %>
   </ul>
 
-
-<p> I have pledged $<%= total_of_pledges %> total on this website</p>
+<p> I have pledged $<%= @total_of_pledges %> total on this website</p>
 
 <h2> Rewards </h2>
 <ul>
-  <%project_total.each do |project, total| %>
-  <%single_project = Project.find_by(title: project) %>
-  <% single_project.rewards.each do |reward| %>
-  <%if total[0] >= reward.dollar_amount %>
-  <li>You are elligible to claim <%= reward.description %>
-   from project: <%= link_to "#{project}", project_path(single_project.id) %>.   <%= button_to "Click Here", claim_path(reward.id) %></li>
-  <%end %>
-  <%end %>
+  <%@project_total.each do |project, total| %>
+    <%single_project = Project.find_by("title =?", project) %>
+    <%single_project_rewards_claimed = 0 %>
+    <%if @user.rewards %>
+      <% @user.rewards.each do |reward| %>
+        <%if reward.project == single_project %>
+        <% single_project_rewards_claimed += reward.dollar_amount%>
+        <%end %>
+      <%end %>
+    <%end %>
+    <% single_project.rewards.each do |reward| %>
+      <%if total[0] >= reward.dollar_amount + single_project_rewards_claimed %>
+    <li>You are elligible to claim <%= reward.description %> for $<%=reward.dollar_amount  %> on project: <%= link_to "#{project}", project_path(single_project.id) %>  <%= button_to "Click Here", claim_path(reward.id) %></li>
+      <%end %>
+    <%end %>
   <%end %>
 </ul>
+
+<h2> Pledge Money left after rewards </h2>
+
+<ul>
+    <%pledge_left = {} %>
+  <% @project_total.each do |(k,v)| %>
+    <%pledge_left[k] = v[0] - @total_reward[k]%>
+  <%end %>
+    <%pledge_left.each do |project, amount| %>
+      <% if amount > 0 %>
+        <li> You have $<%=amount%> left to spend on rewards for <%= link_to "#{project}", project_path((Project.find_by("title = ?", project)).id) %></li>
+      <%end %>
+    <%end %>
+</ul>
+
+<h2>Rewards Claimed </h2>
+
+<ul>
+  <%@rewards_hash.each do |reward,number|  %>
+  <li>I have claimed the reward <%= reward.description %> for $<%= reward.dollar_amount %> on project : <%= link_to "#{reward.project.title}", project_path(reward.project.id) %> x <%= number%> </li>
+<%end %>
+
+</ul>
+<%end %>
+
 
 <h2> Projects Owned </h2>
   <ul>
     <%owned = Project.where("user_id = ?", @user.id) %>
-    <%owned.each do |project| %>
-    <li>I own project <%= project.title %> </li>
-    <%end %>
+      <%owned.each do |project| %>
+        <% if current_user && (project.user_id == current_user.id) %>
+          <li>I own project <%= link_to "#{project.title}", project_path(project.id) %> </li>
+        <%else %>
+          <li>They own project <%= link_to "#{project.title}", project_path(project.id) %> </li>
+        <%end %>
+      <% end %>

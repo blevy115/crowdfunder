@@ -19,9 +19,13 @@ class UsersController < ApplicationController
   end
 
   def show
-
-    @user = User.find(session[:user_id]) if session[:user_id]
+    @user = User.find(params[:id])
+    @project_total = @user.user_pledges
+    @total_of_pledges = @user.total_of_pledge
+    @total_reward = @user.total_rewards
+    @rewards_hash = @user.reward_hash
   end
+
 
 
 end

@@ -10,12 +10,15 @@ class RewardsController < ApplicationController
     @reward.dollar_amount = params[:reward][:dollar_amount]
     @reward.description = params[:reward][:description]
     @reward.limit = params[:reward][:limit]
-
+    if current_user == @reward.project.user
     if @reward.save
       redirect_to project_url(@project), notice: 'Reward created'
     else
       render :new
     end
+  else
+    redirect_to project_url(@project), notice: 'Permission denied, user is not project owner'
+  end
   end
 
   def destroy
@@ -31,12 +34,14 @@ class RewardsController < ApplicationController
 
    def claim_reward
      @reward = Reward.find(params[:id])
-     puts @reward.inspect
+     @user = current_user
+     project = @reward.project
      if @reward.limit >= 1
        @reward.limit -= 1
        @reward.save
-       puts @reward.limit
-       redirect_to root_url
+       @user.rewards << @reward
+       redirect_to user_path(current_user)
+
      else
        flash[:alert] = "No more of this reward"
        redirect_to user_path(current_user)
