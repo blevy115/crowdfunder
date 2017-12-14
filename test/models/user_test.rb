@@ -41,6 +41,7 @@ class UserTest < ActiveSupport::TestCase
 
 
   test "full name displays none if first and last name empty" do
+    user = build(:user, first_name: "",last_name: "" )
     expected = " "
     actual = @user.full_name
     assert_equal(expected, actual)

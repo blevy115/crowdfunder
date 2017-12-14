@@ -1,8 +1,6 @@
 require 'test_helper'
 
 class ProjectTest < ActiveSupport::TestCase
-
-
   setup do
     @project = build(:project)
   end
@@ -60,7 +58,6 @@ class ProjectTest < ActiveSupport::TestCase
 
   test 'time left displays days left' do
     @project.save
-
     expected = "about 1 month"
     actual = @project.time_left
     assert_equal expected, actual
