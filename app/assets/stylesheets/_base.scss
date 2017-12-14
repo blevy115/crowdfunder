@@ -20,3 +20,50 @@ figure {
     display: block;
   }
 }
+
+.site-header {
+  position: relative;
+}
+
+.logo {
+  padding: 1rem;
+  border-radius: 6px;
+  background-color: #fff;
+}
+
+a, a:link, a:visited {
+  text-decoration: none;
+  color: #2c2d30;
+}
+
+.logo a:hover {
+  text-decoration: none;
+}
+
+.logo:before {
+  background-image: -webkit-linear-gradient(225deg,#e32072 0,#4b6bc6 100%);
+  background-image: -moz-linear-gradient(225deg,#e32072 0,#4b6bc6 100%);
+  background-image: -o-linear-gradient(225deg,#e32072 0,#4b6bc6 100%);
+  background-image: linear-gradient(135deg,#e32072 0,#4b6bc6 100%);
+}
+
+.logo:before {
+  background-color: #a0a0a2;
+  border-radius: 7px;
+  content: '';
+  height: 100%;
+  left: -1px;
+  padding: 1px;
+  position: absolute;
+  top: -1px;
+  width: 100px;
+  z-index: -1;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.homepage-stats {
+  list-style-type: none;
+}
