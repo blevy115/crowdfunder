@@ -18,11 +18,9 @@ class User < ActiveRecord::Base
 
   def user_pledges
     pledges = Pledge.where("user_id = ?", id)
-    # total_of_pledges = 0
     projects_pledged = []
     project_total = {}
     pledges.each do |pledge|
-    # total_of_pledges += pledge.dollar_amount
     project = Project.find_by("id = ?", pledge.project_id)
         if projects_pledged.include?(pledge.project_id)
           project_total[project.title][0] += pledge.dollar_amount

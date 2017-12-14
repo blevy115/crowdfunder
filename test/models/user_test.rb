@@ -53,4 +53,48 @@ class UserTest < ActiveSupport::TestCase
     assert project.user.admin
   end
 
+  test "total_pledges_calculate_correctly" do
+    @user = create(:user, first_name: "",last_name: "" )
+    @pledge1 = create(:pledge)
+    @user.pledges << @pledge1
+    @pledge2 = create(:pledge)
+    @user.pledges << @pledge2
+    expected = 20
+    actual = @user.total_of_pledge
+    assert_equal(expected, actual)
+  end
+
+  test "total_rewards_calculate_correctly" do
+    @user = create(:user, first_name: "",last_name: "" )
+    @project1 = create(:project, title: "1")
+    @project2 = create(:project, title: "2")
+    @reward1 = create(:reward, project: @project1, dollar_amount: 20)
+    @reward2 = create(:reward, project: @project1, dollar_amount: 40)
+    @reward3 = create(:reward, project: @project2, dollar_amount: 50)
+    @reward4 = create(:reward, project: @project2, dollar_amount: 70)
+    @user.rewards << @reward1
+    @user.rewards << @reward2
+    @user.rewards << @reward3
+    @user.rewards << @reward4
+    expected = {"1" => 60, "2" => 120}
+    actual = @user.total_rewards
+    assert_equal(expected, actual)
+  end
+
+  test "reward_hash_number" do
+    @user = create(:user, first_name: "",last_name: "" )
+    @reward1 = create(:reward, project: @project1, dollar_amount: 20)
+    @reward2 = @reward1
+    @reward3 = @reward1
+    @reward4 = create(:reward, project: @project2, dollar_amount: 20)
+    @user.rewards << @reward1
+    @user.rewards << @reward2
+    @user.rewards << @reward3
+    @user.rewards << @reward4
+    expected = {@reward1 => 3, @reward4 => 1}
+    actual = @user.reward_hash
+    assert_equal(expected, actual)
+  end
+
+
 end
