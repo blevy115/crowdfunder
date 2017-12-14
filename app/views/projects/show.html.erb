@@ -58,6 +58,20 @@
 
 <%= link_to "Add new reward", new_project_reward_path(@project) %>
 
+<h4>Add An Comment</h4>
+<p>
+  <%= form_for [@project, Comment.new] do |f| %>
+  <%= f.text_area :content %>
+  <%= f.submit  %>
+</p>
+<% end %>
 
-
-<p><%= link_to 'edit comment', edit_project_comment_path(@project, @comment) %></p>
+<h4>Previous Comments</h4>
+  <ul>
+    <%@project.comments.reverse.each_with_index do |com,i|%>
+        <% unless com == nil %>
+          <li><%= (i+1)%>. <%= com.content %> <%= com.created_at %></li>
+          <%= link_to "Edit Comment", edit_project_comment_path(@project, com),method: 'get' %>
+        <% end %>
+    <% end %>
+  </ul>
