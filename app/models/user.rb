@@ -15,4 +15,47 @@ class User < ActiveRecord::Base
   def full_name
     "#{first_name} #{last_name}"
   end
+
+  def user_pledges
+    pledges = Pledge.where("user_id = ?", id)
+    # total_of_pledges = 0
+    projects_pledged = []
+    project_total = {}
+    pledges.each do |pledge|
+    # total_of_pledges += pledge.dollar_amount
+    project = Project.find_by("id = ?", pledge.project_id)
+        if projects_pledged.include?(pledge.project_id)
+          project_total[project.title][0] += pledge.dollar_amount
+        else
+          project_total[project.title] = [pledge.dollar_amount, project.id]
+        end
+       unless projects_pledged.include?(pledge.project_id)
+    projects_pledged << pledge.project_id
+      end
+    end
+    return project_total
+  end
+
+  def total_of_pledge
+    total_of_pledges = 0
+    pledges = Pledge.where("user_id = ?", id)
+    pledges.each do |pledge|
+      total_of_pledges += pledge.dollar_amount
+    end
+    return total_of_pledges
+  end
+
+  def total_rewards
+    total_reward = {}
+    self.rewards.each do |reward|
+      project = Project.find_by("id = ?", reward.project.id)
+      if total_reward[project.title]
+        total_reward[project.title] += reward.dollar_amount
+      else
+        total_reward[project.title] = reward.dollar_amount
+      end
+    end
+    return total_reward
+  end
+
 end

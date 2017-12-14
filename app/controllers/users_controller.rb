@@ -20,7 +20,11 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
+    @project_total = @user.user_pledges
+    @total_of_pledges = @user.total_of_pledge
+    @total_reward = @user.total_rewards
   end
+
 
 
 end
