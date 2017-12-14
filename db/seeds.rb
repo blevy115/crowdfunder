@@ -29,6 +29,7 @@ end
               end_date: Time.now.utc + rand(10).days,
               user: User.all.sample
             )
+            project.categories << Category.all.sample
               puts "project #{project.title} created"
   5.times do
   reward = project.rewards.create!(

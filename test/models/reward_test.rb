@@ -1,6 +1,10 @@
 require 'test_helper'
 
 class RewardTest < ActiveSupport::TestCase
+  setup do
+    @project = create(:project)
+    @reward = build(:reward, project: @project)
+  end
 
   setup do
     @project = create(:project)
