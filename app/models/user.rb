@@ -58,4 +58,13 @@ class User < ActiveRecord::Base
     return total_reward
   end
 
+  def reward_hash
+    rewards_hash = Hash.new(0)
+    self.rewards.each do |reward|  
+      single_reward = Reward.find_by(id:reward.id)
+       rewards_hash[single_reward] += 1
+    end
+    return rewards_hash
+  end
+
 end

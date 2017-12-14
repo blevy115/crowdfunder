@@ -4,7 +4,6 @@
 <h2>Projects Backed</h2>
 <%@user.user_pledges%>
 
-
   <ul>
   <%@project_total.each do |project, total| %>
   <%if total[0] > 0 %>
@@ -29,12 +28,11 @@
     <%end %>
     <% single_project.rewards.each do |reward| %>
       <%if total[0] >= reward.dollar_amount + single_project_rewards_claimed %>
-    <li>You are elligible to claim <%= reward.description %> for $<%=reward.dollar_amount  %> from project: <%= link_to "#{project}", project_path(single_project.id) %>  <%= button_to "Click Here", claim_path(reward.id) %></li>
+    <li>You are elligible to claim <%= reward.description %> for $<%=reward.dollar_amount  %> on project: <%= link_to "#{project}", project_path(single_project.id) %>  <%= button_to "Click Here", claim_path(reward.id) %></li>
       <%end %>
     <%end %>
   <%end %>
 </ul>
-
 
 <h2> Pledge Money left after rewards </h2>
 
@@ -53,10 +51,10 @@
 <h2>Rewards Claimed </h2>
 
 <ul>
-  <%@user.rewards.each do |reward|  %>
-    <%single_reward = Reward.find_by(id:reward.id)%>
-    <li>I have claimed the reward <%= single_reward.description %> for $<%= single_reward.dollar_amount %> from project : <%= link_to "#{single_reward.project.title}", project_path(single_reward.project.id) %> </li>
-  <%end %>
+  <%@rewards_hash.each do |reward,number|  %>
+  <li>I have claimed the reward <%= reward.description %> for $<%= reward.dollar_amount %> on project : <%= link_to "#{reward.project.title}", project_path(reward.project.id) %> x <%= number%> </li>
+<%end %>
+
 </ul>
 <%end %>
 
