@@ -70,8 +70,8 @@
   <ul>
     <%@project.comments.reverse.each_with_index do |com,i|%>
         <% unless com == nil %>
-          <li><%= (i+1) %> <%= com.content %> <%= com.created_at %></li>
-          <%= link_to "Edit Comment", edit_project_comment_path(@project, com),method: 'get' %> 
+          <li><%= (i+1)%>. <%= com.content %> <%= com.created_at %></li>
+          <%= link_to "Edit Comment", edit_project_comment_path(@project, com),method: 'get' %>
         <% end %>
     <% end %>
   </ul>
