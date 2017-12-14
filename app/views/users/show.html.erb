@@ -68,7 +68,7 @@
   <%end %>
     <%pledge_left.each do |project, amount| %>
       <% if amount > 0 %>
-        <li> You have $<%=amount%> left to spend on rewards for <%= project %></li>
+        <li> You have $<%=amount%> left to spend on rewards for <%= link_to "#{project}", project_path((Project.find_by("title = ?", project)).id) %></li>
       <%end %>
     <%end %>
 </ul>
