@@ -36,8 +36,6 @@ class RewardsController < ApplicationController
      @reward = Reward.find(params[:id])
      @user = current_user
      project = @reward.project
-
-     puts @reward.inspect
      if @reward.limit >= 1
        @reward.limit -= 1
        @reward.save
